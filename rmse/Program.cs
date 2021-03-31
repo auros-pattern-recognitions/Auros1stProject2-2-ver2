@@ -697,7 +697,7 @@ namespace Auros1stProject2_1
             double d0 = 1200;   // 초깃값 두께
             double d_sol = 0.0; // "실제" global minimum 이 되는 두께.
             int cnt = 0;        // global minimum 을 찾기 위한 연산 반복 횟수.
-            double[] x = new double[2] { 1, 1 }; // 기울기
+            double[] gradient = new double[2]; // 기울기
 
             while (true)
             {
@@ -751,16 +751,17 @@ namespace Auros1stProject2_1
 
                 // MSE 값의 간격을 확인한다.
                 // 1. 양 옆.
-                bool a = true;
+                bool a = true; // 기울기의 부호가 변화하는 것을 체크
                 bool b = true;
                 
                 for (int i = 1; i < LenData; i++)
                 {
-                    x[i - 1] = ((MSEs[i] - MSEs[i - 1]) / (thicknesses[i] - thicknesses[i - 1]));
+                    gradient[i - 1] = ((MSEs[i] - MSEs[i - 1]) / (thicknesses[i] - thicknesses[i - 1]));
 
-                    _ = (x[i - 1] > 0) ? b = false : a = false;
+                    _ = (gradient[i - 1] > 0) ? b = false : a = false;
 
-                    WriteLine($"기울기 : {x[i - 1]}     gap : {gap}");
+                    WriteLine($"기울기 : {gradient[i - 1]}     gap : {gap}");
+                    // 기울기의 부호가 변할고, MSE의 차가 0.00001 이하일 때 while문을 빠져나옴
                     if (a == false && b == false && Abs(MSEs[i] - MSEs[i - 1]) <= 0.00001)
                     {
                         d_sol = d0;
@@ -769,7 +770,7 @@ namespace Auros1stProject2_1
                 }
                 for (int i = 1; i < 2; i++)
                 {
-                    if (Abs(x[i] - x[i - 1]) <= 0.00001)
+                    if (Abs(gradient[i] - gradient[i - 1]) <= 0.00001)
                     {
                         WriteLine("기울기의 변화율이 작음");
                         gap = 3;
