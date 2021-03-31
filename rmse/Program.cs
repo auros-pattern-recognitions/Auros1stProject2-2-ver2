@@ -761,7 +761,7 @@ namespace Auros1stProject2_1
                     _ = (x[i - 1] > 0) ? b = false : a = false;
 
                     WriteLine($"기울기 : {x[i - 1]}     gap : {gap}");
-                    if (a == false && b == false)
+                    if (a == false && b == false && Abs(MSEs[i] - MSEs[i - 1]) <= 0.00001)
                     {
                         d_sol = d0;
                         goto Find_d_sol;
@@ -769,10 +769,10 @@ namespace Auros1stProject2_1
                 }
                 for (int i = 1; i < 2; i++)
                 {
-                    if (Abs(x[i] - x[i - 1]) <= 0.001)
+                    if (Abs(x[i] - x[i - 1]) <= 0.00001)
                     {
                         WriteLine("기울기의 변화율이 작음");
-                        gap = 2;
+                        gap = 3;
                     }
                 }
             }
